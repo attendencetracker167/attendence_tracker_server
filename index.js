@@ -12,7 +12,14 @@ app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(express.json({ limit: '70mb', extended: true }));
 app.use(express.urlencoded({ limit: '70mb', extended: true }));
 app.use(
-  cors()
+  cors(
+    {
+      origin: "https://master.d2sjt9b5tb7v56.amplifyapp.com/",
+      credentials: true,
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      optionsSuccessStatus: 204,
+    }
+  )
 );
 const userRoutes = require('./Routes/userRoutes')
 const ticketRoutes = require('./Routes/ticketRoutes')
