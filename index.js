@@ -25,7 +25,7 @@ const attendanceRoutes = require('./Routes/attendanceRoutes');
 app.use('/api/user', userRoutes)
 app.use('/api/tickets', ticketRoutes)
 app.use('/api/attendance', attendanceRoutes);
-app.get('/test',(req,res) => {
+app.get('/',(req,res) => {
   res.status(200).json({test:'DB CONNECTED SUCCESSFULLY AND SERVER RUNNING ON 5000'});
 })
 app.use(notFound)
