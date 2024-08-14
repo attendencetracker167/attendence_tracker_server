@@ -6,7 +6,7 @@ const commentSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     userRole: {
       type: String,
-      enum: ["maintainence", "superadmin", "admin", "resident","owner"],
+      enum: ["maintainence","employee", "superadmin", "admin", "projectmanager","owner"],
       required: true,
     },
     subRole: { type: String, default: null },

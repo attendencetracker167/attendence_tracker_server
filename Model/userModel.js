@@ -8,7 +8,7 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["resident", "admin", "maintainence", "owner", "superadmin"],
+      enum: ["resident", "admin","maintainence", "employee","superadmin"],
       message: "{role is not supported}",
     },
     subrole: { type: String,default:null },

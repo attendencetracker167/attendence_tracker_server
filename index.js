@@ -12,7 +12,7 @@ app.use(express.urlencoded({ limit: '70mb', extended: true }));
 app.use(
   cors(
     {
-      origin: "https://appartment-dev-info.netlify.app",
+      origin: "*",
       credentials: true,
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       optionsSuccessStatus: 204,
@@ -21,8 +21,13 @@ app.use(
 );
 const userRoutes = require('./Routes/userRoutes')
 const ticketRoutes = require('./Routes/ticketRoutes')
+const attendanceRoutes = require('./Routes/attendanceRoutes');
 app.use('/api/user', userRoutes)
 app.use('/api/tickets', ticketRoutes)
+app.use('/api/attendance', attendanceRoutes);
+app.get('/test',(req,res) => {
+  res.status(200).json({test:'DB CONNECTED SUCCESSFULLY AND SERVER RUNNING ON 5000'});
+})
 app.use(notFound)
 app.use(erorMiddleware)
 

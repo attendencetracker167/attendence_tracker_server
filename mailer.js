@@ -15,7 +15,7 @@ async function sendmail(mailOptions) {
       service: "gmail",
       auth: {
         type: "OAuth2",
-        user: "vigneshcs1812@gmail.com",
+        user: "attendencetracker167@gmail.com",
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         refreshToken: process.env.REFRESH_TOKEN,
@@ -23,6 +23,7 @@ async function sendmail(mailOptions) {
       },
     });
     const info = await transporter.sendMail(mailOptions);
+    console.log(info);
     return info
   } catch (error) {
     console.log(error);

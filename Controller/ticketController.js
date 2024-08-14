@@ -60,16 +60,16 @@ const createTicket = async (req, res, next) => {
         ticketNo: ticketNo,
       });
       let mailOptions = {
-        from: "vigneshcs1812@gmail.com",
+        from: "attendencetracker167@gmail.com",
         to: email,
-        cc: "vigneshofficial1812@gmail.com",
+        cc: "priyadharshiniyuvaraj1@gmail.com",
         subject: `New Ticket Created-${newTicket.ticketNo}`,
         text: `A new ticket :${newTicket.ticketNo} has been created successFully`,
         html: `<h1>Thank You</h1>
         </br>
         <h3>A new ticket :${newTicket.ticketNo} has been created successFully</h3>
         </br>
-        <small>By Appartment Maintainence</small>
+        <small>By Help Desk</small>
         `,
       };
 
@@ -112,16 +112,16 @@ const createTicket = async (req, res, next) => {
             );
           }
           let mailOptions = {
-            from: "vigneshcs1812@gmail.com",
+            from: "attendencetracker167@gmail.com",
             to: email,
-            cc: "vigneshofficial1812@gmail.com",
+            cc: "priyadharshiniyuvaraj1@gmail.com",
             subject: `New Ticket Created-${newTicket.ticketNo}`,
             text: `A new ticket :${newTicket.ticketNo} has been created successFully`,
             html: `<h1>Thank You</h1>
             </br>
             <h3>A new ticket :${newTicket.ticketNo} has been created successFully</h3>
             </br>
-            <small>By Appartment Maintainence</small>
+            <small>By Help Desk</small>
             `,
           };
 
@@ -212,9 +212,9 @@ const updateStatus = async (req, res, next) => {
       return next(new HttpError("Something Went wrong!", 404));
     }
     const mailOptions = {
-      from: "vigneshcs1812@gmail.com",
+      from: "attendencetracker167@gmail.com",
       to: UserEmail.email,
-      cc: "vigneshofficial1812@gmail.com",
+      cc: "priyadharshiniyuvaraj1@gmail.com",
       subject: `Ticket Closed - ${ticketStatus.ticketNo}`,
       text: `ticket :${ticketStatus.ticketNo} has been Closed successFully`,
       html: `<h1>Thank You</h1>
@@ -223,9 +223,7 @@ const updateStatus = async (req, res, next) => {
       </br>
       <h3> Ticket :${ticketStatus.ticketNo} has been Closed successFully</h3>
       </br>
-      <a href='http://localhost:5173/login'>View Ticket Status & Details</a>
-      </br>
-      <small>By Appartment Maintainence</small>
+      <small>By Help Desk</small>
       `,
     };
     await sendMail(mailOptions);
@@ -235,7 +233,7 @@ const updateStatus = async (req, res, next) => {
   }
 };
 
-// --------------------------------ASSIGN TICKET TO MAINTAINENCE MEMBER--------------------------------
+// --------------------------------ASSIGN TICKET TO EMPLOYEE MEMBER--------------------------------
 // METHOD-PATCH
 // PROTECTED
 // API-ENDPOINT:api/tickets/:ticketId
@@ -249,12 +247,12 @@ const updateAssignedTo = async (req, res, next) => {
     }
     if (!assign) {
       return next(
-        new HttpError("Please Select Maintainer to Assign Ticket", 422)
+        new HttpError("Please Select Employee to Assign Ticket", 422)
       );
     }
-    if (assign==="select maintainer") {
+    if (assign==="select employee") {
       return next(
-        new HttpError("Please Select Maintainer to Assign Ticket", 422)
+        new HttpError("Please Select Employee to Assign Ticket", 422)
       );
     }
     const assignedMember = await User.findById(assign);
@@ -273,11 +271,10 @@ const updateAssignedTo = async (req, res, next) => {
 
     const ticketUser = await User.findById(assignTicket.userId);
     // console.log(ticketUser);
-
-    const AssignedCC = ["vigneshofficial1812@gmail.com"];
+    const AssignedCC = ["priyadharshiniyuvaraj1@gmail.com"];
     AssignedCC.push(ticketUser.email);
     const mailOptions = {
-      from: "vigneshcs1812@gmail.com",
+      from: "attendencetracker167@gmail.com",
       to: assignedMember.email,
       cc: AssignedCC,
       subject: `Ticket Assigned-${assignTicket.ticketNo}`,
@@ -286,11 +283,9 @@ const updateAssignedTo = async (req, res, next) => {
       </br>
       <h3>Ticket:${assignTicket.ticketNo} has been Assigned successFully to ${assignedMember.username}</h3>
       </br>
-      <p>Click to Comment,if Anything Want to Say Regarding Ticket! </p>
+      <p>if Anything Want to Say Regarding Ticket!,please login and comment </p>
       </br>
-      <h5><a href='http://localhost:5173/login'>Comment Now!</a></h5>
-      </br>
-      <small>By Appartment Maintainence</small>
+      <small>By Help Desk</small>
       `,
     };
     await sendmail(mailOptions);
@@ -369,11 +364,10 @@ const createComment = async (req, res, next) => {
       { _id: ticket._id },
       { $push: { comments: savedComments._id } }
     );
-    const commentCC = ["vigneshofficial1812@gmail.com"];
+
+    const commentCC = ["priyadharshiniyuvaraj1@gmail.com"];
     if (ticket.assignedTo) {
       const assignedMembermail = await User.findById(ticket.assignedTo).select("email")
-      // console.log(assignedMembermail);
-      // console.log(ticket);
       if (assignedMembermail,"1") {
         commentCC.push(assignedMembermail.email);
       }
@@ -383,7 +377,7 @@ const createComment = async (req, res, next) => {
     commentCC.push(ticketUser.email);
 
     const mailOptions = {
-      from: "vigneshcs1812@gmail.com",
+      from: "attendencetracker167@gmail.com",
       to: commentCC,
       cc: req.user.emailid,
       subject: `${req.user.name} Commented-${ticket.ticketNo}`,
@@ -394,7 +388,7 @@ const createComment = async (req, res, next) => {
       </br>
       <a href='http://localhost:5173/login'>View Comment</a>
       </br>
-      <small>By Appartment Maintainence</small>
+      <small>By Help Desk</small>
       `,
     };
     await sendMail(mailOptions);
@@ -515,28 +509,49 @@ const ticketCounts = async (req, res, next) => {
   }
 };
 const assignedTicketCounts = async (req, res, next) => {
-  if (req.user.role === !"maintainence") {
-    return next(new HttpError("Only for maintainece Role"));
+  if (req.user.role === "admin") {
+    return next(new HttpError("Only for Projects managers and Employees Role"));
   }
   try {
-    // const openCount = await Ticket.countDocuments({
-    //   assignedTo: req.user.id,
-    //   status: "open",
-    // });
-    const closedCount = await Ticket.countDocuments({
-      assignedTo: req.user.id,
-      status: "closed",
-    });
-    const inProgressCount = await Ticket.countDocuments({
-      assignedTo: req.user.id,
-      status: "inprogress",
-    });
+    if (req.user.role==="maintainence") {
+      const openCount = await Ticket.countDocuments({
+        assignedTo: req.user.id,
+        status: "open",
+      });
+      const closedCount = await Ticket.countDocuments({
+        assignedTo: req.user.id,
+        status: "closed",
+      });
+      const inProgressCount = await Ticket.countDocuments({
+        assignedTo: req.user.id,
+        status: "inprogress",
+      });
+      res.status(200).json({
+        open: req.user.role?openCount:0,
+        closed: closedCount,
+        inProgress: inProgressCount,
+      });
+    }else{
+      const openCount = await Ticket.countDocuments({
+        userId: req.user.id,
+        status: "open",
+      });
+      const closedCount = await Ticket.countDocuments({
+        userId: req.user.id,
+        status: "closed",
+      });
+      const inProgressCount = await Ticket.countDocuments({
+        userId: req.user.id,
+        status: "inprogress",
+      });
+      res.status(200).json({
+        open: req.user.role?openCount:0,
+        closed: closedCount,
+        inProgress: inProgressCount,
+      });
+    }
 
-    res.status(200).json({
-      // open: openCount,
-      closed: closedCount,
-      inProgress: inProgressCount,
-    });
+    
   } catch (error) {
     console.error(error);
     return next(new HttpError(error));

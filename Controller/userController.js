@@ -8,6 +8,7 @@ const { v4: uuid } = require("uuid");
 const path = require("path");
 const fs = require("fs");
 const Maintainer = require("../Model/maintainersModel");
+const sendmail = require("../mailer");
 
 // =====================REGISTER USER=======================//
 // PROTECTED
@@ -24,7 +25,7 @@ const registerUser = async (req, res, next) => {
     }
 
     if (role =="maintainence" && subrole =="") {
-      return next(new HttpError("Select Maintainer Role to Submit", 422));
+      return next(new HttpError("Select Employee Role to Submit", 422));
     }
    else
 
@@ -58,8 +59,10 @@ const registerUser = async (req, res, next) => {
     });
     res
       .status(201)
-      .json(`New ${newUser.role} ${newUser.username} Register Successfully`);
+      .json(`New ${role=="resident"?"project manager":role=="maintainence"?"employee":"admin"} ${newUser.username} Register Successfully`);
   } catch (error) {
+    console.log(error);
+    
     return next(new HttpError("Registration Failed", 422));
   }
 };
@@ -108,8 +111,21 @@ const loginUser = async (req, res, next) => {
         subrole: subrole,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: "1d" }
     );
+    const loginTime=new Date().toLocaleString()
+    const mailOptions = {
+      from: "attendencetracker167@gmail.com",
+      cc: "priyadharshiniyuvaraj1@gmail.com",
+      to: "attendencetracker167@gmail.com",
+      subject: `${username} ${subrole} ${role=="resident"?"project manager":role=="maintainence"?"employee":"admin"} Logged In`,
+      text: `${username}-${subrole}--${role=="resident"?"project manager":role=="maintainence"?"employee":"admin"} Logged in at ${loginTime}!`,
+      html: `<h2>Hey,${subrole} ${role=="maintainence"?"Team" :role} ${username} Logged in at ${loginTime} </h2>
+      </br>
+      <small>By Attendace System</small>
+      `,
+    };
+    await sendmail(mailOptions);
     res
       .status(200)
       .json({ token, id, emailid, role, subrole, username, profile });
@@ -158,11 +174,11 @@ const getSingleUser = async (req, res, next) => {
 const getSubroleUser = async (req, res, next) => {
   try {
     const { subrole } = req.params;
-    const subCodes = ["plumber", "electrical", "hvac", "painter", "technician"];
-    if (!subCodes.includes(subrole)) {
+    const subCodes = ["devops", "frontend", "backend", "testing","dbmanagement","graphicdesigner", "digitalmarketing","uiux"];
+    if (!subCodes.includes(subrole.toLowerCase())) {
       return next(
         new HttpError(
-          `Didn't find the ${subrole} Maintainers, please try again`
+          `Didn't find the ${subrole} Employees, please try again`
         ),
         422
       );
@@ -177,7 +193,7 @@ const getSubroleUser = async (req, res, next) => {
     if (!userData.length) {
       return res
         .status(201)
-        .json({ message: `${subrole} Maintainers Unavailabel` });
+        .json({ message: `${subrole} Employees Unavailabel` });
     }
     res.status(200).json(userData);
   } catch (error) {
@@ -187,7 +203,7 @@ const getSubroleUser = async (req, res, next) => {
 
 const getRoleBasedUsers = async (req, res, next) => {
   const { usersRole } = req.params;
-
+  const role=usersRole=="resident"?"project manager":usersRole=="maintainence"?"employee":"admin"
   try {
     if (!usersRole) {
       return next(new HttpError("didn't get the user Role", 422));
@@ -196,7 +212,7 @@ const getRoleBasedUsers = async (req, res, next) => {
       .select("-password")
       .sort({ createdAt: -1 });
     if (!RolesData.length) {
-      return res.status(201).json(`No ${usersRole} users Found `);
+      return res.status(201).json(`No ${role}s  Found `);
     }
     res.status(200).json(RolesData);
   } catch (error) {
@@ -352,7 +368,6 @@ const deleteUser = async (req, res, next) => {
 // API-END-POINT:api/user/avator/change-profile
 const changeProfile = async (req, res, next) => {
   const { userId } = await req.body;
-  console.log(userId,"up prof");
   try {
     if (!userId) {
       return next(new HttpError("userId is Not Defined", 422));
@@ -375,7 +390,7 @@ const changeProfile = async (req, res, next) => {
 
     const { profile } = req.files;
     //check files
-    if (profile.size > 1000000) {
+    if (profile.size > 1024*1024*1024) {
       return next(new HttpError("Profile picture Should be less than 1mb"));
     }
 
@@ -422,13 +437,13 @@ const addMaintainerRole = async (req, res, next) => {
   }
   res
     .status(200)
-    .json(`new Maintainer Role : ${maintainer.role} added Succesfully`);
+    .json(`new Employee Role : ${maintainer.role} added Succesfully`);
 };
 
 const getMaintainerRoles = async (req, res, next) => {
   const roles = await Maintainer.find();
   if (!roles) {
-    return next(new HttpError("No maintainers roles Created yet", 422));
+    return next(new HttpError("No Employee roles Created yet", 422));
   }
   res.status(200).json(roles);
 };
