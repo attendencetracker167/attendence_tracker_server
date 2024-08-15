@@ -30,6 +30,9 @@ app.use('/api/attendance', attendanceRoutes);
 app.get('/',(req,res) => {
   res.status(200).json({test:'DB CONNECTED SUCCESSFULLY AND SERVER RUNNING ON 5000'});
 })
+app.get('/test',(req,res) => {
+  res.status(200).json({test:{`TEST CONNECTED SUCCESSFULLY AND SERVER RUNNING ON ${process.env.PORT}`}});
+})
 app.use(notFound)
 app.use(erorMiddleware)
 
