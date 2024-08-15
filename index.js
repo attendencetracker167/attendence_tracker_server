@@ -31,7 +31,7 @@ app.get('/',(req,res) => {
   res.status(200).json({test:'DB CONNECTED SUCCESSFULLY AND SERVER RUNNING ON 5000'});
 })
 app.get('/test',(req,res) => {
-  res.status(200).json({test:"TEST CONNECTED SUCCESSFULLY");
+  res.status(200).json({test:"TEST CONNECTED SUCCESSFULLY"});
 })
 app.use(notFound)
 app.use(erorMiddleware)
