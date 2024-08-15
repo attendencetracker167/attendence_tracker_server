@@ -14,7 +14,7 @@ app.use(express.urlencoded({ limit: '70mb', extended: true }));
 app.use(
   cors(
     {
-      origin: "http://localhost:5173",
+      origin: ["http://localhost:5173","https://master.d2ntan67dq483m.amplifyapp.com"],
       credentials: true,
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       optionsSuccessStatus: 204,
