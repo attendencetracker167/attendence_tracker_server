@@ -33,6 +33,9 @@ app.get('/',(req,res) => {
 app.get('/test',(req,res) => {
   res.status(200).json({test:"TEST CONNECTED SUCCESSFULLY"});
 })
+app.get('/api/test',(req,res) => {
+  res.status(200).json({test:"API TEST CONNECTED SUCCESSFULLY"});
+})
 app.use(notFound)
 app.use(erorMiddleware)
 
