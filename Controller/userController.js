@@ -174,17 +174,17 @@ const getSingleUser = async (req, res, next) => {
 const getSubroleUser = async (req, res, next) => {
   try {
     const { subrole } = req.params;
-    const subCodes = ["devops", "frontend", "backend", "testing","dbmanagement","graphicdesigner", "digitalmarketing","uiux"];
-    if (!subCodes.includes(subrole.toLowerCase())) {
-      return next(
-        new HttpError(
-          `Didn't find the ${subrole} Employees, please try again`
-        ),
-        422
-      );
-    }
+    // const subCodes = ["devops", "frontend", "backend", "testing","dbmanagement","graphicdesigner", "digitalmarketing","uiux"];
+    // if (!subCodes.includes(subrole.toLowerCase())) {
+    //   return next(
+    //     new HttpError(
+    //       `Didn't find the ${subrole} Employees, please try again`
+    //     ),
+    //     422
+    //   );
+    // }
     if (!subrole) {
-      return next(new HttpError("Didn't find the Subrole please file"), 422);
+      return next(new HttpError("Didn't find the Employees, please try again"), 422);
     }
     const userData = await User.find(
       { subrole: subrole },
